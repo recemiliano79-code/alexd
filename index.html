@@ -3,265 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soul of Hallownest | Message</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
+    <title>Hallownest Chronicle | Pure Vessel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Quattrocento:wght@400;700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --hollow-blue: #3d5a80;
-            --soul-white: #e0fbfc;
-            --void-black: #050505;
-            --pale-blue: rgba(152, 193, 217, 0.2);
+            --void: #050507;
+            --soul: #e0fbfc;
+            --hollow-blue: #2c3e50;
+            --pale-king: #afbdc4;
+            --geo-gold: #f3cf1b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--void-black);
-            color: var(--soul-white);
+            background-color: var(--void);
+            color: var(--soul);
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
         }
 
-        /* --- FONDO ANIMADO: LLUVIA DE CITY OF TEARS --- */
-        .background-container {
+        /* --- FONDO DINÁMICO --- */
+        #canvas-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at center, #1b263b 0%, #050505 100%);
-            overflow: hidden;
+            background: radial-gradient(circle at center, #131921 0%, #050507 100%);
         }
 
-        .drop {
-            position: absolute;
-            background: rgba(174, 217, 224, 0.2);
-            width: 1px;
-            height: 80px;
-            top: -100px;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh); }
-        }
-
-        /* --- PANTALLA DE INICIO --- */
+        /* --- PANTALLA DE INICIO (DREAM GATE) --- */
         #start-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--void-black);
+            background: var(--void);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: 1.5s ease;
+            transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .mask-btn {
-            width: 80px;
+        .knight-mask {
+            width: 120px;
             cursor: pointer;
-            filter: drop-shadow(0 0 10px white);
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
             transition: 0.5s;
+            animation: pulse-mask 3s infinite ease-in-out;
         }
 
-        .mask-btn:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 20px var(--hollow-blue));
+        @keyframes pulse-mask {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px white); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--hollow-blue)); }
+        }
+
+        .start-hint {
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: var(--pale-king);
+            text-align: center;
+            padding: 0 20px;
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
-        .container {
-            max-width: 750px;
-            width: 90%;
-            padding: 40px;
-            background: rgba(10, 10, 15, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .main-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 2s ease;
+        }
+
+        .main-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- MARCO ESTILO MAPA --- */
+        .map-frame {
+            border: 2px solid var(--pale-king);
+            padding: 40px 25px;
             position: relative;
-            z-index: 10;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-            border-radius: 4px;
+            background: rgba(5, 5, 7, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 0 30px rgba(175, 189, 196, 0.1);
         }
 
-        .container::before {
-            content: "";
+        .map-frame::before, .map-frame::after {
+            content: "✧";
             position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border: 1px solid rgba(152, 193, 217, 0.3);
-            pointer-events: none;
+            color: var(--pale-king);
+            font-size: 1.2rem;
         }
+        .map-frame::before { top: 10px; left: 10px; }
+        .map-frame::after { bottom: 10px; right: 10px; }
 
-        /* --- HEADER --- */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .title {
+        header { text-align: center; margin-bottom: 40px; }
+        
+        .main-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            letter-spacing: 8px;
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            letter-spacing: 10px;
             text-transform: uppercase;
-            color: var(--soul-white);
-            text-shadow: 0 0 15px var(--hollow-blue);
+            text-shadow: 0 0 20px var(--soul);
         }
 
-        .soul-vessel {
-            width: 40px;
-            margin: 20px auto;
-            opacity: 0.8;
-            animation: glow 3s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { opacity: 0.4; filter: drop-shadow(0 0 5px white); }
-            to { opacity: 1; filter: drop-shadow(0 0 15px var(--hollow-blue)); }
-        }
-
-        /* --- MENSAJE --- */
-        .message-content {
-            font-family: 'Quattrocento', serif;
-            line-height: 2;
-            font-size: 1.15rem;
-            text-align: center;
-            color: #d1d1d1;
-        }
-
-        .message-content span.highlight {
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-        }
-
-        /* --- PLAYER --- */
-        .audio-container {
-            margin-top: 40px;
+        /* --- SECCIÓN DE AMULETOS (CHARMS) --- */
+        .charms-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
         }
 
-        .track-info {
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            color: var(--hollow-blue);
-            text-transform: uppercase;
+        .charm {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--pale-king);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: help;
+        }
+
+        .charm::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            font-family: 'Cinzel';
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .charm:hover::after { opacity: 1; bottom: -25px; }
+
+        /* --- TEXTO DEL MENSAJE --- */
+        .message-text {
+            font-family: 'Quattrocento', serif;
+            font-size: clamp(1rem, 4.5vw, 1.25rem);
+            line-height: 1.8;
+            text-align: center;
+            color: var(--pale-king);
+        }
+
+        .highlight {
+            color: var(--soul);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(224, 251, 252, 0.3);
+        }
+
+        /* --- REPRODUCTOR MP3 --- */
+        .player-box {
+            margin-top: 50px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(175, 189, 196, 0.2);
+        }
+
+        .soul-orb {
+            width: 30px;
+            height: 30px;
+            background: var(--soul);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--soul);
+            animation: pulse-soul 2s infinite;
+        }
+
+        @keyframes pulse-soul {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
         }
 
         audio {
-            width: 100%;
-            max-width: 300px;
-            filter: invert(0.8) sepia(1) saturate(2) hue-rotate(180deg);
+            flex: 1;
             height: 30px;
+            filter: invert(1) hue-rotate(180deg) brightness(1.5);
+            opacity: 0.6;
         }
 
-        /* --- PARTÍCULAS DE "SOUL" --- */
-        .soul-particle {
-            position: absolute;
-            background: radial-gradient(circle, white, transparent);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.4;
-            animation: float-soul 10s infinite ease-in-out;
-        }
-
-        @keyframes float-soul {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
-        }
-
+        /* --- FOOTER --- */
         footer {
-            position: absolute;
-            bottom: 30px;
-            width: 100%;
+            margin-top: 60px;
             text-align: center;
+            padding: 20px;
             font-family: 'Cinzel', serif;
             font-size: 0.6rem;
-            letter-spacing: 4px;
-            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 5px;
+            color: rgba(175, 189, 196, 0.3);
         }
 
-        .hidden { display: none !important; opacity: 0; }
+        /* --- RESPONSIVIDAD MÓVIL --- */
+        @media (max-width: 600px) {
+            .map-frame { padding: 30px 15px; }
+            .main-title { letter-spacing: 5px; }
+            .charms-container { gap: 10px; }
+            .charm { width: 50px; height: 50px; }
+            .message-text { line-height: 1.6; }
+            .player-box { padding: 10px 15px; }
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <!-- Pantalla de Inicio -->
     <div id="start-screen">
-        <p style="font-family: 'Cinzel'; margin-bottom: 30px; letter-spacing: 5px; font-size: 0.8rem;">DESCEND INTO THE DREAM</p>
-        <img src="https://vignette.wikia.nocookie.net/hollowknight/images/e/ed/The_Knight_Icon.png" class="mask-btn" onclick="startExperience()" alt="Knight Mask">
+        <img src="https://vignette.wikia.nocookie.net/hollowknight/images/e/ed/The_Knight_Icon.png" class="knight-mask" onclick="igniteSoul()" alt="Knight Mask">
+        <p class="start-hint">FOCUS SOUL TO BEGIN<br><span style="font-size: 0.5rem; opacity: 0.5;">(Haz clic en la máscara)</span></p>
     </div>
 
-    <div class="background-container" id="bg"></div>
+    <!-- Fondo -->
+    <canvas id="canvas-bg"></canvas>
 
-    <main class="container">
+    <div class="main-wrapper" id="content">
         <header>
-            <h1 class="title">Pure Soul</h1>
-            <div class="soul-vessel">
-                <svg viewBox="0 0 100 100" fill="white">
-                    <circle cx="50" cy="50" r="20" />
-                    <path d="M50 20 L50 80 M20 50 L80 50" stroke="white" stroke-width="2" />
-                </svg>
-            </div>
+            <h1 class="main-title">Pure Spirit</h1>
         </header>
 
-        <article class="message-content">
-            Eres alguien que transmite buena energía, tranquilidad y confianza. Se nota tu educación, tu forma amable de tratar a las personas y esa actitud positiva que llevas contigo. A veces pequeños gestos dicen mucho, y los tuyos hablan muy bien de quién eres como persona.
-            <br><br>
-            <span class="highlight">Me parece que eres una mujer fuerte, capaz y con metas claras.</span> Tienes esa determinación que inspira respeto, y aunque quizá no siempre lo notes, proyectas seguridad y carácter. Eso es algo que no todas las personas logran transmitir.
-            <br><br>
-            Solo quería que supieras que <span class="highlight">eres una persona valiosa</span>, que tu manera de ser se aprecia y que cosas como tu actitud, tu forma de expresarte y tu energía no pasan desapercibidas.
-        </article>
+        <main class="map-frame">
+            <!-- Iconos de Amuletos Representativos -->
+            <div class="charms-container">
+                <div class="charm" data-tooltip="TRANQUILIDAD">✨</div>
+                <div class="charm" data-tooltip="FORTALEZA">⚔️</div>
+                <div class="charm" data-tooltip="DETERMINACIÓN">🔥</div>
+                <div class="charm" data-tooltip="VALOR">🛡️</div>
+            </div>
 
-        <div class="audio-container">
-            <p class="track-info">Playing: Ride</p>
-            <audio id="music" loop>
-                <source src="ride.mp3" type="audio/mpeg">
-            </audio>
-        </div>
-    </main>
+            <article class="message-text">
+                Eres alguien que transmite <span class="highlight">buena energía, tranquilidad y confianza</span>. Se nota tu educación, tu forma amable de tratar a las personas y esa actitud positiva que llevas contigo. A veces pequeños gestos dicen mucho, y los tuyos hablan muy bien de quién eres como persona.
+                <br><br>
+                Me parece que eres una <span class="highlight">mujer fuerte, capaz y con metas claras</span>. Tienes esa determinación que inspira respeto, y aunque quizá no siempre lo notes, proyectas seguridad y carácter. Eso es algo que no todas las personas logran transmitir.
+                <br><br>
+                Solo quería que supieras que <span class="highlight">eres una persona valiosa</span>, que tu manera de ser se aprecia y que cosas como tu actitud, tu forma de expresarte y tu energía no pasan desapercibidas.
+            </article>
 
-    <footer>
-        NO COST TOO GREAT // HALLOWNEST ARCHIVE 2024
-    </footer>
+            <div class="player-box">
+                <div class="soul-orb"></div>
+                <audio id="bg-music" loop>
+                    <source src="ride.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </main>
+
+        <footer>
+            HALLOWNEST RECORDS // NO COST TOO GREAT
+        </footer>
+    </div>
 
     <script>
-        // Crear Lluvia
-        const bg = document.getElementById('bg');
-        for (let i = 0; i < 50; i++) {
-            let drop = document.createElement('div');
-            drop.className = 'drop';
-            drop.style.left = Math.random() * 100 + 'vw';
-            drop.style.animationDuration = (Math.random() * 1 + 0.5) + 's';
-            drop.style.animationDelay = Math.random() * 2 + 's';
-            bg.appendChild(drop);
+        // Animación de partículas en el fondo
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
-        // Crear Partículas Soul
-        for (let i = 0; i < 20; i++) {
-            let particle = document.createElement('div');
-            particle.className = 'soul-particle';
-            let size = Math.random() * 10 + 2 + 'px';
-            particle.style.width = size;
-            particle.style.height = size;
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.top = Math.random() * 100 + 'vh';
-            particle.style.animationDelay = Math.random() * 10 + 's';
-            bg.appendChild(particle);
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * -0.5 - 0.2;
+                this.opacity = Math.random() * 0.5;
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(224, 251, 252, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
 
-        function startExperience() {
-            document.getElementById('start-screen').style.opacity = '0';
+        function initParticles() {
+            for (let i = 0; i < 60; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+
+        // Iniciar Experiencia
+        function igniteSoul() {
+            const startScreen = document.getElementById('start-screen');
+            const content = document.getElementById('content');
+            const music = document.getElementById('bg-music');
+
+            // Efecto de flash blanco
+            startScreen.style.background = "white";
+            
             setTimeout(() => {
-                document.getElementById('start-screen').classList.add('hidden');
-                document.getElementById('music').play();
-            }, 1500);
+                startScreen.style.opacity = '0';
+                content.classList.add('visible');
+                music.play();
+                setTimeout(() => {
+                    startScreen.classList.add('hidden');
+                }, 1000);
+            }, 200);
         }
     </script>
 </body>
